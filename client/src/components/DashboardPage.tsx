@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Button, Typography, Space, Descriptions, message, Row, Col } from 'antd';
-import { LogoutOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { Card, Button, Typography, Space, Descriptions, message, Row, Col, Divider, Statistic } from 'antd';
+import { LogoutOutlined, EditOutlined, PlusOutlined, DollarOutlined, UserOutlined, CalendarOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { hubspotService } from '../services/hubspotService';
 import { clearSession, getEmailFromSession } from '../utils/sessionUtils';
@@ -105,7 +105,7 @@ const DashboardPage: React.FC = () => {
     }}>
       <Row gutter={[0, 24]}>
         <Col span={24}>
-          <Card>
+          <Card style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
             <div style={{ 
               display: 'flex',
               justifyContent: 'space-between',
@@ -139,8 +139,11 @@ const DashboardPage: React.FC = () => {
                   <Col xs={24} lg={16}>
                     <Card 
                       title={
-                        <Space>
-                          <Title level={4} style={{ margin: 0 }}>Booking Details</Title>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <Space>
+                            <UserOutlined />
+                            <Title level={4} style={{ margin: 0 }}>Booking Details</Title>
+                          </Space>
                           <Button 
                             type="primary"
                             icon={<EditOutlined />}
@@ -148,40 +151,132 @@ const DashboardPage: React.FC = () => {
                           >
                             Edit Details
                           </Button>
-                        </Space>
+                        </div>
                       }
-                      style={{ height: '100%' }}
+                      style={{ height: '100%', borderRadius: 8 }}
+                      className="booking-details-card"
                     >
-                      <Descriptions
-                        bordered
-                        column={{ xs: 1, sm: 2 }}
-                        size="middle"
-                        labelStyle={{ fontWeight: 500 }}
-                      >
-                        <Descriptions.Item label="Email" span={2}>{bookingData.email}</Descriptions.Item>
-                        <Descriptions.Item label="First Name">{bookingData.firstName}</Descriptions.Item>
-                        <Descriptions.Item label="Last Name">{bookingData.lastName}</Descriptions.Item>
-                        <Descriptions.Item label="Phone" span={2}>{bookingData.phone}</Descriptions.Item>
-                        <Descriptions.Item label="Trip Date" span={2}>{bookingData.tripDate}</Descriptions.Item>
-                        <Descriptions.Item label="Number of Adults">{bookingData.adults}</Descriptions.Item>
-                        <Descriptions.Item label="Total Children">
-                          {(bookingData.childrenUnder18 || 0) + (bookingData.childrenOver18 || 0)}
-                        </Descriptions.Item>
-                      </Descriptions>
+                      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+                        {/* Personal Information Section */}
+                        <div>
+                          <Title level={5} style={{ marginBottom: 16 }}>
+                            <UserOutlined /> Personal Information
+                          </Title>
+                          <Row gutter={[24, 16]}>
+                            <Col xs={24} sm={12}>
+                              <Text type="secondary">First Name</Text>
+                              <div>
+                                <Text strong style={{ fontSize: 16 }}>{bookingData.firstName}</Text>
+                              </div>
+                            </Col>
+                            <Col xs={24} sm={12}>
+                              <Text type="secondary">Last Name</Text>
+                              <div>
+                                <Text strong style={{ fontSize: 16 }}>{bookingData.lastName}</Text>
+                              </div>
+                            </Col>
+                            <Col xs={24}>
+                              <Text type="secondary">Email</Text>
+                              <div>
+                                <Text strong style={{ fontSize: 16 }}>{bookingData.email}</Text>
+                              </div>
+                            </Col>
+                            <Col xs={24}>
+                              <Text type="secondary">Phone</Text>
+                              <div>
+                                <Text strong style={{ fontSize: 16 }}>{bookingData.phone}</Text>
+                              </div>
+                            </Col>
+                          </Row>
+                        </div>
+
+                        <Divider style={{ margin: '8px 0' }} />
+
+                        {/* Trip Details Section */}
+                        <div>
+                          <Title level={5} style={{ marginBottom: 16 }}>
+                            <CalendarOutlined /> Trip Details
+                          </Title>
+                          <Row gutter={[24, 16]}>
+                            <Col xs={24}>
+                              <Text type="secondary">Trip Date</Text>
+                              <div>
+                                <Text strong style={{ 
+                                  fontSize: 16,
+                                  background: '#e6f7ff',
+                                  padding: '4px 12px',
+                                  borderRadius: 4,
+                                  border: '1px solid #91d5ff'
+                                }}>
+                                  <CalendarOutlined style={{ marginRight: 8 }} />
+                                  {bookingData.tripDate}
+                                </Text>
+                              </div>
+                            </Col>
+                          </Row>
+                        </div>
+
+                        <Divider style={{ margin: '8px 0' }} />
+
+                        {/* Participants Section */}
+                        <div>
+                          <Title level={5} style={{ marginBottom: 16 }}>
+                            <UsergroupAddOutlined /> Participants
+                          </Title>
+                          <Row gutter={[24, 16]}>
+                            <Col xs={24} sm={8}>
+                              <Card size="small" style={{ textAlign: 'center', background: '#f6ffed', borderColor: '#b7eb8f' }}>
+                                <Statistic
+                                  title={<Text strong>Adults</Text>}
+                                  value={bookingData.adults}
+                                  prefix={<UserOutlined />}
+                                />
+                              </Card>
+                            </Col>
+                            <Col xs={24} sm={8}>
+                              <Card size="small" style={{ textAlign: 'center', background: '#fff7e6', borderColor: '#ffd591' }}>
+                                <Statistic
+                                  title={<Text strong>Children ≤18</Text>}
+                                  value={bookingData.childrenUnder18}
+                                  prefix={<UserOutlined />}
+                                />
+                              </Card>
+                            </Col>
+                            <Col xs={24} sm={8}>
+                              <Card size="small" style={{ textAlign: 'center', background: '#f9f0ff', borderColor: '#d3adf7' }}>
+                                <Statistic
+                                  title={<Text strong>Children &gt;18</Text>}
+                                  value={bookingData.childrenOver18}
+                                  prefix={<UserOutlined />}
+                                />
+                              </Card>
+                            </Col>
+                          </Row>
+                        </div>
+                      </Space>
                     </Card>
                   </Col>
                   <Col xs={24} lg={8}>
                     <Card
-                      title={<Title level={4} style={{ margin: 0 }}>Payment Information</Title>}
-                      style={{ height: '100%' }}
+                      title={
+                        <Space>
+                          <DollarOutlined />
+                          <Title level={4} style={{ margin: 0 }}>Payment Information</Title>
+                        </Space>
+                      }
+                      style={{ height: '100%', borderRadius: 8 }}
+                      className="payment-info-card"
                     >
                       <Space direction="vertical" size="large" style={{ width: '100%' }}>
                         <div>
                           <Text type="secondary">Status</Text>
-                          <div>
+                          <div style={{ marginTop: 8 }}>
                             <Text strong style={{ 
                               color: getStatusColor(bookingData.paymentStatus),
-                              fontSize: 18
+                              fontSize: 20,
+                              background: `${getStatusColor(bookingData.paymentStatus)}15`,
+                              padding: '4px 12px',
+                              borderRadius: 4
                             }}>
                               {bookingData.paymentStatus}
                             </Text>
@@ -189,8 +284,8 @@ const DashboardPage: React.FC = () => {
                         </div>
                         <div>
                           <Text type="secondary">Total Amount</Text>
-                          <div>
-                            <Text strong style={{ fontSize: 24 }}>
+                          <div style={{ marginTop: 8 }}>
+                            <Text strong style={{ fontSize: 28 }}>
                               ${bookingData.price}
                             </Text>
                           </div>
@@ -217,6 +312,7 @@ const DashboardPage: React.FC = () => {
                     size="large"
                     icon={<PlusOutlined />}
                     onClick={handleNewBooking}
+                    style={{ height: 48, padding: '0 32px' }}
                   >
                     Book Your Trip
                   </Button>

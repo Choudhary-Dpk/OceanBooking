@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Card, Button, Descriptions, Typography, Space, message, Divider } from 'antd';
-import { CheckCircleOutlined, DollarOutlined } from '@ant-design/icons';
+import { Card, Button, Descriptions, Typography, Space, message, Divider, Row, Col, Statistic } from 'antd';
+import { CheckCircleOutlined, DollarOutlined, UserOutlined, CalendarOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 import PaymentModal from './PaymentModal';
 
 const { Title, Text } = Typography;
@@ -67,106 +67,221 @@ const Step3: React.FC = () => {
   return (
     <div style={{ 
       padding: '32px 24px',
-      maxWidth: 1000,
+      maxWidth: 1200,
       margin: '0 auto',
       minHeight: '100vh',
       background: '#f5f5f5'
     }}>
-      <Card style={{ 
-        boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-        borderRadius: 8
-      }}>
-        <Title level={2} style={{ 
-          textAlign: 'center', 
-          marginBottom: 32,
-          borderBottom: '1px solid #f0f0f0',
-          paddingBottom: 24
-        }}>
-          Review & Payment
-        </Title>
-
-        <Card
-          title={<Title level={4} style={{ margin: 0 }}>Booking Details</Title>}
-          style={{ marginBottom: 24 }}
-          className="booking-details-card"
-        >
-          <Descriptions 
-            bordered 
-            column={{ xs: 1, sm: 2 }}
-            size="middle"
-            labelStyle={{ fontWeight: 500 }}
-          >
-            <Descriptions.Item label="Full Name" span={2}>
-              {bookingData.firstName} {bookingData.lastName}
-            </Descriptions.Item>
-            <Descriptions.Item label="Email" span={2}>{bookingData.email}</Descriptions.Item>
-            <Descriptions.Item label="Phone" span={2}>{bookingData.phone}</Descriptions.Item>
-            <Descriptions.Item label="Trip Date" span={2}>{bookingData.tripDate}</Descriptions.Item>
-            <Descriptions.Item label="Number of Adults">{bookingData.adults}</Descriptions.Item>
-            <Descriptions.Item label="Total Children">
-              {bookingData.childrenUnder18 + bookingData.childrenOver18}
-            </Descriptions.Item>
-          </Descriptions>
-        </Card>
-
-        <Card 
-          title={<Title level={4} style={{ margin: 0 }}><DollarOutlined /> Price Breakdown</Title>}
-          style={{ marginBottom: 24, background: '#fafafa' }}
-          className="price-breakdown-card"
-        >
-          <Space direction="vertical" style={{ width: '100%' }} size="middle">
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Text>Base Price:</Text>
-              <Text strong>${basePrice.toFixed(2)}</Text>
+      <Row gutter={[0, 24]}>
+        <Col span={24}>
+          <Card style={{ 
+            borderRadius: 8,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          }}>
+            <div style={{ 
+              textAlign: 'center', 
+              marginBottom: 32,
+              borderBottom: '1px solid #f0f0f0',
+              paddingBottom: 24
+            }}>
+              <Title level={2} style={{ margin: 0 }}>
+                Review & Payment
+              </Title>
             </div>
-            {bookingData.adults > 0 && (
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Text>Adults ({bookingData.adults} × $200):</Text>
-                <Text strong>${adultsCost.toFixed(2)}</Text>
-              </div>
-            )}
-            {bookingData.childrenUnder18 > 0 && (
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Text>Children ≤18 ({bookingData.childrenUnder18} × $100):</Text>
-                <Text strong>${childrenUnder18Cost.toFixed(2)}</Text>
-              </div>
-            )}
-            {bookingData.childrenOver18 > 0 && (
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Text>Children &gt;18 ({bookingData.childrenOver18} × $150):</Text>
-                <Text strong>${childrenOver18Cost.toFixed(2)}</Text>
-              </div>
-            )}
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Text>Subtotal:</Text>
-              <Text strong>${subtotal.toFixed(2)}</Text>
-            </div>
-            {discount > 0 && (
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Text type="success">Early Booking Discount (20% off):</Text>
-                <Text type="success">-${discount.toFixed(2)}</Text>
-              </div>
-            )}
-            <Divider style={{ margin: '12px 0' }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Title level={3} style={{ margin: 0 }}>Final Price:</Title>
-              <Title level={3} style={{ margin: 0 }}>${finalPrice.toFixed(2)}</Title>
-            </div>
-          </Space>
-        </Card>
 
-        <div style={{ textAlign: 'center' }}>
-          <Button
-            type="primary"
-            size="large"
-            icon={<CheckCircleOutlined />}
-            onClick={() => setIsPaymentModalOpen(true)}
-            style={{ height: 50, minWidth: 200 }}
-          >
-            Proceed to Payment
-          </Button>
-        </div>
-      </Card>
+            <Row gutter={[24, 24]}>
+              <Col xs={24} lg={16}>
+                <Card
+                  title={
+                    <Space>
+                      <UserOutlined />
+                      <Title level={4} style={{ margin: 0 }}>Booking Details</Title>
+                    </Space>
+                  }
+                  style={{ borderRadius: 8 }}
+                  className="booking-details-card"
+                >
+                  <Space direction="vertical" size="large" style={{ width: '100%' }}>
+                    {/* Personal Information Section */}
+                    <div>
+                      <Title level={5} style={{ marginBottom: 16 }}>
+                        <UserOutlined /> Personal Information
+                      </Title>
+                      <Row gutter={[24, 16]}>
+                        <Col xs={24} sm={12}>
+                          <Text type="secondary">First Name</Text>
+                          <div>
+                            <Text strong style={{ fontSize: 16 }}>{bookingData.firstName}</Text>
+                          </div>
+                        </Col>
+                        <Col xs={24} sm={12}>
+                          <Text type="secondary">Last Name</Text>
+                          <div>
+                            <Text strong style={{ fontSize: 16 }}>{bookingData.lastName}</Text>
+                          </div>
+                        </Col>
+                        <Col xs={24}>
+                          <Text type="secondary">Email</Text>
+                          <div>
+                            <Text strong style={{ fontSize: 16 }}>{bookingData.email}</Text>
+                          </div>
+                        </Col>
+                        <Col xs={24}>
+                          <Text type="secondary">Phone</Text>
+                          <div>
+                            <Text strong style={{ fontSize: 16 }}>{bookingData.phone}</Text>
+                          </div>
+                        </Col>
+                      </Row>
+                    </div>
+
+                    <Divider style={{ margin: '8px 0' }} />
+
+                    {/* Trip Details and Participants in one row */}
+                    <Row gutter={[24, 24]}>
+                      {/* Trip Details Section */}
+                      <Col xs={24} md={12}>
+                        <Card 
+                          title={
+                            <Space>
+                              <CalendarOutlined />
+                              <Text strong>Trip Details</Text>
+                            </Space>
+                          }
+                          size="small"
+                          style={{ height: '100%' }}
+                        >
+                          <Space direction="vertical" style={{ width: '100%' }} size="large">
+                            <div>
+                              <Text type="secondary">Trip Date</Text>
+                              <div style={{ marginTop: 8 }}>
+                                <Text strong style={{ 
+                                  fontSize: 16,
+                                  background: '#e6f7ff',
+                                  padding: '4px 12px',
+                                  borderRadius: 4,
+                                  border: '1px solid #91d5ff'
+                                }}>
+                                  <CalendarOutlined style={{ marginRight: 8 }} />
+                                  {bookingData.tripDate}
+                                </Text>
+                              </div>
+                            </div>
+                          </Space>
+                        </Card>
+                      </Col>
+
+                      {/* Participants Section */}
+                      <Col xs={24} md={12}>
+                        <Card
+                          title={
+                            <Space>
+                              <UsergroupAddOutlined />
+                              <Text strong>Participants</Text>
+                            </Space>
+                          }
+                          size="small"
+                          style={{ height: '100%' }}
+                        >
+                          <Row gutter={[16, 16]}>
+                            <Col xs={24} sm={8}>
+                              <Card size="small" style={{ textAlign: 'center', background: '#f6ffed', borderColor: '#b7eb8f' }}>
+                                <Statistic
+                                  title={<Text strong>Adults</Text>}
+                                  value={bookingData.adults}
+                                  prefix={<UserOutlined />}
+                                />
+                              </Card>
+                            </Col>
+                            <Col xs={24} sm={8}>
+                              <Card size="small" style={{ textAlign: 'center', background: '#fff7e6', borderColor: '#ffd591' }}>
+                                <Statistic
+                                  title={<Text strong>Children ≤18</Text>}
+                                  value={bookingData.childrenUnder18}
+                                  prefix={<UserOutlined />}
+                                />
+                              </Card>
+                            </Col>
+                            <Col xs={24} sm={8}>
+                              <Card size="small" style={{ textAlign: 'center', background: '#f9f0ff', borderColor: '#d3adf7' }}>
+                                <Statistic
+                                  title={<Text strong>Children &gt;18</Text>}
+                                  value={bookingData.childrenOver18}
+                                  prefix={<UserOutlined />}
+                                />
+                              </Card>
+                            </Col>
+                          </Row>
+                        </Card>
+                      </Col>
+                    </Row>
+                  </Space>
+                </Card>
+              </Col>
+
+              <Col xs={24} lg={8}>
+                <Card 
+                  title={
+                    <Space>
+                      <DollarOutlined />
+                      <Title level={4} style={{ margin: 0 }}>Price Breakdown</Title>
+                    </Space>
+                  }
+                  style={{ borderRadius: 8 }}
+                  className="price-breakdown-card"
+                >
+                  <Space direction="vertical" style={{ width: '100%' }} size="middle">
+                    <Row gutter={[16, 16]} align="middle">
+                      <Col xs={12}>
+                        <Text type="secondary">Subtotal</Text>
+                        <div style={{ marginTop: 8 }}>
+                          <Text strong style={{ fontSize: 16 }}>${subtotal.toFixed(2)}</Text>
+                        </div>
+                      </Col>
+                      {discount > 0 && (
+                        <Col xs={12} style={{ textAlign: 'right' }}>
+                          <Text type="secondary">Discount</Text>
+                          <div style={{ marginTop: 8 }}>
+                            <Text type="success" strong style={{ fontSize: 16 }}>
+                              -${discount.toFixed(2)}
+                            </Text>
+                          </div>
+                        </Col>
+                      )}
+                    </Row>
+
+                    <Divider style={{ margin: '12px 0' }} />
+
+                    <Row gutter={[16, 16]} align="middle">
+                      <Col xs={12}>
+                        <Text strong style={{ fontSize: 16 }}>Final Price</Text>
+                      </Col>
+                      <Col xs={12} style={{ textAlign: 'right' }}>
+                        <Text strong style={{ fontSize: 20 }}>${finalPrice.toFixed(2)}</Text>
+                      </Col>
+                    </Row>
+
+                    <Button
+                      type="primary"
+                      size="large"
+                      icon={<CheckCircleOutlined />}
+                      onClick={() => setIsPaymentModalOpen(true)}
+                      style={{ 
+                        width: '100%',
+                        height: 48,
+                        marginTop: 16,
+                        borderRadius: 4
+                      }}
+                    >
+                      Proceed to Payment
+                    </Button>
+                  </Space>
+                </Card>
+              </Col>
+            </Row>
+          </Card>
+        </Col>
+      </Row>
 
       <PaymentModal
         isOpen={isPaymentModalOpen}
