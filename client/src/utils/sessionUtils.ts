@@ -1,4 +1,5 @@
 const SESSION_KEY = 'oceanBookingSession';
+const FORM_DATA = 'bookingFormData';
 const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes in milliseconds
 
 interface SessionData {
@@ -34,6 +35,7 @@ export const getSessionData = (): SessionData | null => {
 
 export const clearSession = (): void => {
   sessionStorage.removeItem(SESSION_KEY);
+  sessionStorage.removeItem(FORM_DATA);
 };
 
 export const isSessionValid = (): boolean => {

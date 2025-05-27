@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Form, Input, InputNumber, DatePicker, Button, Card, Space, Typography, Row, Col, Divider, Alert, message } from 'antd';
 import { UserOutlined, PhoneOutlined, MailOutlined, CalendarOutlined, UsergroupAddOutlined, DollarOutlined } from '@ant-design/icons';
@@ -45,6 +45,19 @@ const Step1: React.FC = () => {
   // Get edit mode and booking data from location state
   const { editMode, bookingData, personalOnly } = location.state || {};
 
+  // Load form data from session storage on mount
+  useEffect(() => {
+    const savedFormData = sessionStorage.getItem('bookingFormData');
+    if (savedFormData && !editMode) {
+      const parsedData = JSON.parse(savedFormData);
+      form.setFieldsValue({
+        ...parsedData,
+        tripDate: parsedData.tripDate ? dayjs(parsedData.tripDate) : undefined
+      });
+      calculatePrice(parsedData);
+    }
+  }, [form, editMode]);
+
   // Set initial form values if in edit mode
   React.useEffect(() => {
     if (editMode && bookingData) {
@@ -88,6 +101,12 @@ const Step1: React.FC = () => {
 
   const onValuesChange = (changedValues: any, allValues: any) => {
     calculatePrice(allValues);
+    // Save form data to session storage whenever it changes
+    const formData = {
+      ...allValues,
+      tripDate: allValues.tripDate ? allValues.tripDate.format('YYYY-MM-DD') : undefined
+    };
+    sessionStorage.setItem('bookingFormData', JSON.stringify(formData));
   };
 
   const onFinish = async (values: FormData) => {
@@ -108,7 +127,9 @@ const Step1: React.FC = () => {
       if (personalOnly || bookingData?.paymentStatus === 'Paid') {
         navigate('/dashboard');
       } else {
-        // Otherwise proceed to review page
+        // Save the form data to session storage before navigating
+        sessionStorage.setItem('bookingFormData', JSON.stringify(formData));
+        // Navigate to review page
         navigate('/review', { state: formData });
       }
     } catch (error) {

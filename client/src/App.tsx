@@ -4,8 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import HomePage from './components/HomePage';
 import DashboardPage from './components/DashboardPage';
 import Step1PersonalInfo from './components/Step1PersonalInfo';
-// import Step2 from './components/Step2AddonsPricing';
-import Step3ReviewPayment from './components/Step3ReviewPayment';
+import Step2ReviewPayment from './components/Step2ReviewPayment';
 import ProtectedRoute from './components/ProtectedRoute';
 import { ConfigProvider } from 'antd';
 
@@ -38,7 +37,7 @@ const App: React.FC = () => {
             path="/review"
             element={
               <ProtectedRoute>
-                <Step3ReviewPayment />
+                <Step2ReviewPayment />
               </ProtectedRoute>
             }
           />
